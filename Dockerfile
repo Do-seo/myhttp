@@ -1,12 +1,10 @@
-FROM golang:1.11-alpine AS build
+FROM ubuntu:14.04
+MAINTAINER "dsh <dsh@dshub.cloud>"
+LABEL "purpose"="webserver practice"
+RUN apt-get update && apt-get install apache2 -y
+RUN apt-get install vim -y
+ADD website.tar.gz /var/www/html
+WORKDIR /var/www/html
+EXPOSE 80
+CMD apachectl -D FOREGROUND
 
-MAINTAINER shdo <shdo@dshub.could>
-LABEL "purpose"="Go Application Service Deployment"
-
-WORKDIR /src/
-COPY main.go go.* /src/
-RUN CGO_ENABLED=0 go build -o /bin/demo
-
-FROM scratch
-COPY --from=build /bin/demo /bin/demo
-ENTRYPOINT ["/bin/demo"]
